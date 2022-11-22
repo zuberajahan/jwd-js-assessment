@@ -2,21 +2,20 @@
   JWD JavaScript Assessment
 
   This code is unfinished. You will need to study it to figure out what it does. Then you will need to use this and
-  your own code, to finish the app. 
-  
+  your own code, to finish the app.
+
   The tasks you need to do are below.
 
     TASKS TODO:
-      1. Calculate the score as the total of the number of correct answers
+      1. Calculate the score as the total of the number of correct answers.
 
-      2. Add an Event listener for the submit button, which will display the score and highlight 
-         the correct answers when the button is clicked. Use the code from lines 67 to 86 to help you.
+      2. Add an Event listener for the submit button, which will display the score and highlight the correct answers when the button is clicked.
 
       3. Add 2 more questions to the app (each question must have 4 options).
 
-      4. Reload the page when the reset button is clicked (hint: search window.location)
+      4. Reload the page when the reset button is clicked (hint: search window.location).
 
-      5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers
+      5. Add a countdown timer - when the time is up, end the quiz, display the score and highlight the correct answers.
 *************************** */
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -44,6 +43,16 @@ window.addEventListener('DOMContentLoaded', () => {
       o: ['Sydney', 'Canberra', 'Melbourne', 'Perth'],
       a: 1,
     },
+    {
+      q: 'What is the currency of Spain?',
+      o: ['Yen', 'Dollar', 'Euro', 'Rupee'],
+      a: 2,
+    },
+    {
+      q: 'What is the capital of India?',
+      o: ['Dehli', 'Hyderabad', 'Bombay', 'Pune'],
+      a: 0,
+    },
   ];
 
   // function to Display the quiz questions and answers from the object
@@ -63,9 +72,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  let score = 0;
   // Calculate the score
   const calculateScore = () => {
-    let score = 0;
+
     quizArray.map((quizItem, index) => {
       for (let i = 0; i < 4; i++) {
         //highlight the li if it is the correct answer
@@ -76,15 +86,62 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (quizItem.a == i) {
           //change background color of li element here
+          liElement.style.backgroundColor = "#32cd32"
         }
 
         if (radioElement.checked) {
           // code for task 1 goes here
+          if (quizItem.a == i) {
+            score =  score + 1;
+            }
         }
       }
     });
+    let displayScore = document.getElementById('score');
+    displayScore.innerHTML = 'Score = ' + score +" / "+"5"
+
   };
 
   // call the displayQuiz function
+
   displayQuiz();
+  const btnSubmit = document.getElementById('btnSubmit');
+  btnSubmit.addEventListener("click",calculateScore);
+  // reset button
+  const btnReset = document.getElementById('btnReset');
+  btnReset.addEventListener("click",resetFunction);
+  function resetFunction () {
+   window.location.reload();
+  }
+
+  function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            timer = duration;
+            if (minutes == 0 && seconds == 0) {
+              //alert('Time Up')
+              calculateScore();
+              timer = 0;
+              score = 0;
+            }
+        }
+
+    }, 1000);
+
+}
+
+window.onload = function () {
+    var oneMinutes = 60 * 1,
+        display = document.querySelector('#time');
+    startTimer(oneMinutes, display);
+};
 });
